@@ -1,0 +1,10 @@
+# Paths are relative to the base directory ("frontend").
+[build]
+  command = "npm run build"
+  publish = "build"
+
+# Single-page app: let React Router handle client-side routes.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
