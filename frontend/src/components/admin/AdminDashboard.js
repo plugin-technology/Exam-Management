@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 import { getQuestions, getExams, getUserStats } from '../../services/api';
 import { formatDate, getExamStatus } from '../../utils/helpers';
 
 const AdminDashboard = () => {
-  const { user } = useAuth();
   const [stats, setStats] = useState({ totalQuestions: 0, totalExams: 0, activeExams: 0, activeStudents: 0 });
   const [exams, setExams] = useState([]);
   const [statusFilter, setStatusFilter] = useState('ALL');
