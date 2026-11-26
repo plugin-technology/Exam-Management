@@ -1,26 +1,6 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: exam-mysql
-    restart: always
-    environment:
-      TZ: Asia/Kolkata
-      MYSQL_DATABASE: exam_system
-      MYSQL_ROOT_PASSWORD: root
-    ports:
-      - "3306:3306"
-    volumes:
-      - exam-mysql-data:/var/lib/mysql
-    networks:
-      - exam-net
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   backend:
     build:
       context: ./backend
@@ -29,16 +9,15 @@ services:
     restart: always
     ports:
       - "8080:8080"
+    env_file:
+      - .env
     environment:
       TZ: Asia/Kolkata
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/exam_system?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      JWT_SECRET: fP48uRNG0YFrRis9bOAziWjM7+UAhnevOnJjT4eGYrtH5dAzfTIO2qALwv0iICBxO+rea2WaNXPrkvyL75ISvA==
-      APP_CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost
-    depends_on:
-      mysql:
-        condition: service_healthy
+      SPRING_DATASOURCE_URL: ${DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      APP_CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS}
     networks:
       - exam-net
 
@@ -58,6 +37,3 @@ services:
 networks:
   exam-net:
     driver: bridge
-
-volumes:
-  exam-mysql-data:
